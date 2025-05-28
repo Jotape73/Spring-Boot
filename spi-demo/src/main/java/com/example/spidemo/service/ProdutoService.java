@@ -19,10 +19,6 @@ public class ProdutoService {
         produtos.add(new ProdutoDTO(4L, "Borracha"));
     }
 
-    public List<ProdutoDTO> listar() {
-        return produtos;
-    }
-
     public ProdutoDTO buscarPorId(int id) {
         return produtos.stream()
                 .filter(p -> p.getId() == id)
@@ -30,11 +26,14 @@ public class ProdutoService {
                 .orElse(null);
     }
 
-    public ProdutoDTO salvar(ProdutoDTO produtoDTO) {
-        long novoId = produtos.size() + 1L;
-        produtoDTO.setId(novoId);
-        produtos.add(produtoDTO);
-        return produtoDTO;
+    public ProdutoDTO salvar(ProdutoDTO produto) {
+        produto.setId((long) (produtos.size() + 1));
+        produtos.add(produto);
+        return produto;
+    }
+
+    public List<ProdutoDTO> listar() {
+        return produtos;
     }
 
     public boolean deletar(int id) {
