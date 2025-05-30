@@ -40,11 +40,6 @@ public class ProdutoService {
         .filter(p -> p.getId() == id)
         .findFirst()
         .orElse(null);
-
-        if (encontrado == null) {
-            log.warn("Produto com ID {} não encontrado.", id);
-        }
-
         return encontrado;
     }
 
@@ -65,10 +60,6 @@ public class ProdutoService {
 
     public ProdutoDTO atualizar(int id, ProdutoDTO produtoDTO) {
     ProdutoDTO existente = buscarPorId(id);
-    if (existente == null) {
-        log.error("Erro ao atualizar: produto com ID {} não existe.", id);
-        return null;
-    }
     existente.setNome(produtoDTO.getNome());
     return existente;
     }
