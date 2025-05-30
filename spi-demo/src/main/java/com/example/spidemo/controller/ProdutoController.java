@@ -32,7 +32,13 @@ public class ProdutoController implements ProdutoApi {
     @Override
     public ResponseEntity<List<ProdutoDTO>> buscarPorNome(String nome) {
         List<ProdutoDTO> filtrados = service.buscarPorNome(nome);
-        return ResponseEntity.ok(filtrados);
+
+        if (filtrados.isEmpty()) {
+            return ResponseEntity.notFound().build(); // 404 se não achar nada
+        }
+
+        service.enviarNotificacaoAssincrona(nome); // tarefa assíncrona
+        return ResponseEntity.accepted().body(filtrados); // 202 Accepted com resultado
     }
 
     @Override

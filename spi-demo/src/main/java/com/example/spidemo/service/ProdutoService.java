@@ -1,6 +1,8 @@
 package com.example.spidemo.service;
 
 import com.example.spidemo.dto.ProdutoDTO;
+
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -9,6 +11,16 @@ import java.util.stream.Collectors;
 
 @Service
 public class ProdutoService {
+
+    @Async
+    public void enviarNotificacaoAssincrona(String nome) {
+        try {
+            Thread.sleep(2000); // Simula delay de envio
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        System.out.println("Busca por produto: " + nome);
+    }
 
     private List<ProdutoDTO> produtos = new ArrayList<>();
 
