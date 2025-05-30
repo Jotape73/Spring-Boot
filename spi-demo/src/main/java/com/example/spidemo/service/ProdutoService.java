@@ -9,8 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Service
 public class ProdutoService {
+    private static final Logger log = LoggerFactory.getLogger(ProdutoService.class);
 
     @Async
     public void enviarNotificacaoAssincrona(String nome) {
@@ -18,8 +22,8 @@ public class ProdutoService {
             Thread.sleep(2000); // Simula delay de envio
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
+            log.error("Erro ao enviar notificação assíncrona", e);
         }
-        System.out.println("Busca por produto: " + nome);
     }
 
     private List<ProdutoDTO> produtos = new ArrayList<>();
@@ -32,11 +36,18 @@ public class ProdutoService {
     }
 
     public ProdutoDTO buscarPorId(int id) {
-        return produtos.stream()
-                .filter(p -> p.getId() == id)
-                .findFirst()
-                .orElse(null);
+    ProdutoDTO encontrado = produtos.stream()
+        .filter(p -> p.getId() == id)
+        .findFirst()
+        .orElse(null);
+
+        if (encontrado == null) {
+            log.warn("Produto com ID {} não encontrado.", id);
+        }
+
+        return encontrado;
     }
+
 
     public ProdutoDTO salvar(ProdutoDTO produto) {
         produto.setId((long) (produtos.size() + 1));
@@ -55,9 +66,10 @@ public class ProdutoService {
     public ProdutoDTO atualizar(int id, ProdutoDTO produtoDTO) {
     ProdutoDTO existente = buscarPorId(id);
     if (existente == null) {
-        return null; // não encontrado
+        log.error("Erro ao atualizar: produto com ID {} não existe.", id);
+        return null;
     }
-    existente.setNome(produtoDTO.getNome()); // atualiza o nome (pode adicionar mais campos depois)
+    existente.setNome(produtoDTO.getNome());
     return existente;
     }
     

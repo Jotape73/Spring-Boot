@@ -15,7 +15,7 @@ public class EmailService {
     public void enviarEmail(String destino, String mensagem) {
         try {
             Thread.sleep(3000);
-            System.out.println("📧 E-mail enviado para " + destino + " com a mensagem: " + mensagem);
+            System.out.println("E-mail enviado para " + destino + " com a mensagem: " + mensagem);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             System.out.println("Erro ao enviar e-mail");

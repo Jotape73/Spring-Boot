@@ -8,11 +8,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 
 @RestController
 @RequestMapping(ProdutoApi.BASE)
 public class ProdutoController implements ProdutoApi {
+    private static final Logger log = LoggerFactory.getLogger(ProdutoController.class);
 
     @Autowired
     private ProdutoService service;
@@ -34,10 +38,12 @@ public class ProdutoController implements ProdutoApi {
         List<ProdutoDTO> filtrados = service.buscarPorNome(nome);
 
         if (filtrados.isEmpty()) {
+            log.warn("Produto nao encontrado ou invalido: {}", nome);
             return ResponseEntity.notFound().build(); // 404 se não achar nada
         }
 
         service.enviarNotificacaoAssincrona(nome); // tarefa assíncrona
+        log.info("Busca por produto: {}", nome);
         return ResponseEntity.accepted().body(filtrados); // 202 Accepted com resultado
     }
 
